@@ -17,6 +17,7 @@ export async function run() {
     targetType: getInput("target-type") || null,
     healthCheckPath: getInput("health-check-path") || null,
     healthCheckProtocol: getInput("health-check-protocol") || null,
+    healthCheckHttpCode: getInput("health-check-http-code") || null,
   } as ConfigureTargetGroupInputs);
 
   const arn = targetGroup?.TargetGroupArn;

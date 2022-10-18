@@ -12,6 +12,7 @@ export interface ConfigureTargetGroupInputs {
   targetType?: string;
   healthCheckPath?: string;
   healthCheckProtocol?: string;
+  healthCheckHttpCode?: string;
 }
 
 function getClient(): ECS {
@@ -41,6 +42,9 @@ export async function createTargetGroup(
   inputs: ConfigureTargetGroupInputs
 ): Promise<TargetGroup | undefined> {
   const ecs = getClient();
+  const matcher = inputs.healthCheckHttpCode
+    ? { HttpCode: inputs.healthCheckHttpCode }
+    : undefined;
   const { TargetGroups } = await ecs
     .createTargetGroup({
       Name: inputs.name,
@@ -50,6 +54,7 @@ export async function createTargetGroup(
       TargetType: inputs.targetType,
       HealthCheckPath: inputs.healthCheckPath,
       HealthCheckProtocol: inputs.healthCheckProtocol,
+      Matcher: matcher,
     } as CreateTargetGroupInput)
     .promise();
 

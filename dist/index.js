@@ -31,6 +31,7 @@ function run() {
             targetType: core_1.getInput("target-type") || null,
             healthCheckPath: core_1.getInput("health-check-path") || null,
             healthCheckProtocol: core_1.getInput("health-check-protocol") || null,
+            healthCheckHttpCode: core_1.getInput("health-check-http-code") || null,
         });
         const arn = targetGroup === null || targetGroup === void 0 ? void 0 : targetGroup.TargetGroupArn;
         core_1.info(`Target group ARN: ${arn}`);
@@ -110,6 +111,9 @@ exports.describeTargetGroup = describeTargetGroup;
 function createTargetGroup(inputs) {
     return __awaiter(this, void 0, void 0, function* () {
         const ecs = getClient();
+        const matcher = inputs.healthCheckHttpCode
+            ? { HttpCode: inputs.healthCheckHttpCode }
+            : undefined;
         const { TargetGroups } = yield ecs
             .createTargetGroup({
             Name: inputs.name,
@@ -119,6 +123,7 @@ function createTargetGroup(inputs) {
             TargetType: inputs.targetType,
             HealthCheckPath: inputs.healthCheckPath,
             HealthCheckProtocol: inputs.healthCheckProtocol,
+            Matcher: matcher,
         })
             .promise();
         return TargetGroups === null || TargetGroups === void 0 ? void 0 : TargetGroups.pop();
