@@ -33,6 +33,7 @@ function run() {
             healthCheckProtocol: core_1.getInput("health-check-protocol") || null,
             healthCheckHttpCode: core_1.getInput("health-check-http-code") || null,
         });
+        console.log("targetGroup:", targetGroup);
         const arn = targetGroup === null || targetGroup === void 0 ? void 0 : targetGroup.TargetGroupArn;
         core_1.info(`Target group ARN: ${arn}`);
         core_1.setOutput("target-group-arn", arn);
@@ -100,9 +101,11 @@ function describeTargetGroup(name) {
             const response = yield ecs
                 .describeTargetGroups({ Names: [name] })
                 .promise();
+            console.log(`all targetgroups with name ${name}:`, response.TargetGroups);
             return (_a = response.TargetGroups) === null || _a === void 0 ? void 0 : _a.pop();
         }
         catch (error) {
+            console.log(`no targetgroups with name ${name}.`);
             return;
         }
     });
@@ -126,6 +129,7 @@ function createTargetGroup(inputs) {
             Matcher: matcher,
         })
             .promise();
+        console.log("createTargetGroup response:", TargetGroups);
         return TargetGroups === null || TargetGroups === void 0 ? void 0 : TargetGroups.pop();
     });
 }

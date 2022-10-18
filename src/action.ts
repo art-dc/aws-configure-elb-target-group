@@ -1,4 +1,5 @@
 import { info, getInput, setOutput, setFailed } from "@actions/core";
+import { Console } from "console";
 
 import {
   describeTargetGroup,
@@ -19,6 +20,8 @@ export async function run() {
     healthCheckProtocol: getInput("health-check-protocol") || null,
     healthCheckHttpCode: getInput("health-check-http-code") || null,
   } as ConfigureTargetGroupInputs);
+
+  console.log("targetGroup:", targetGroup);
 
   const arn = targetGroup?.TargetGroupArn;
 

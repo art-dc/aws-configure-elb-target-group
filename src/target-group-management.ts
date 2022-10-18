@@ -32,8 +32,11 @@ export async function describeTargetGroup(
       .describeTargetGroups({ Names: [name] } as DescribeTargetGroupsInput)
       .promise();
 
+    console.log(`all targetgroups with name ${name}:`, response.TargetGroups);
+
     return response.TargetGroups?.pop();
   } catch (error) {
+    console.log(`no targetgroups with name ${name}.`);
     return;
   }
 }
@@ -57,6 +60,8 @@ export async function createTargetGroup(
       Matcher: matcher,
     } as CreateTargetGroupInput)
     .promise();
+
+  console.log("createTargetGroup response:", TargetGroups);
 
   return TargetGroups?.pop();
 }
